@@ -3,7 +3,6 @@ const { verifyToken } = require('../helpers/jwt')
 
 module.exports = async function (req,res, next) {
   const { access_token } = req.headers
-  // console.log(access_token, '<<<<<<<<<<<<<<<<< access_token nihh');
   try {
     if (!access_token) {
       throw {msg: 'access_token not found!', status: 401}
@@ -15,7 +14,6 @@ module.exports = async function (req,res, next) {
         throw {msg: 'not authenticated!', status: 401}
       } else {
         req.userLoggedIn = {email: user.email, id: user.id}
-        // console.log(req.userLoggedIn, '<<<<<<<<<<<<<<< user yang login');
         next()
       } 
     }

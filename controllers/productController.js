@@ -20,9 +20,25 @@ class ProductController {
     }
   }
 
-  // static async getAllProduct(req,res,next) {
-    
-  // }
+  static async getAllProduct(req,res,next) {
+    const category = req.query.category
+    const id = req.query.id
+    const options = {
+      where: {
+        ...category ? {category: category} : {},
+        ...id ? {id: id} : {}
+      },
+      order: [
+        ['id', 'ASC']
+      ]
+    }
+    try {
+      const products = await Product.findAll(options)
+      res.status(200).json(products)
+    } catch (err) {
+      next(err)
+    }
+  }
 
   static async updateProduct(req,res,next) {
     console.log('<<<<<<<<<<<<< masuk update product');
