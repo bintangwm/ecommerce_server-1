@@ -8,7 +8,6 @@ module.exports = async function (req,res, next) {
       throw {msg: 'access_token not found!', status: 401}
     } else {
       const decoded = verifyToken(access_token)
-      // console.log(decoded);
       const user = await User.findOne({where: { email: decoded.email}})
       if (!user) {
         throw {msg: 'not authenticated!', status: 401}
@@ -18,8 +17,6 @@ module.exports = async function (req,res, next) {
       } 
     }
   } catch (err) {
-    // console.log(err, '<<< err di authentication');
-    // return res.json(err)
     next(err)
   }
 }

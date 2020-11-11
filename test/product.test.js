@@ -72,7 +72,6 @@ describe('Create product, POST /products', function() {
         stock: 10,
         category: 'Elektronik'
       })
-      // .set('access_token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBtYWlsLmNvbSIsImlhdCI6MTYwNDkzNjgzMX0.rZxW70ZR9OSVht-SETIk1_L30_ycSbaoJxOfHd9XJVA')
       .then(response => {
         let {body, status} = response
         expect(status).toBe(401)
@@ -289,7 +288,6 @@ describe('Update product, PUT /products', function() {
       })
       .then(response => {
         let { body, status } = response
-        console.log(body, '<<<<<<<<<<<<<<< ini update product');
         expect(body).toEqual({msg: 'not authorized!'})
         expect(status).toBe(401)
         done()
@@ -313,13 +311,11 @@ describe('Update product, PUT /products', function() {
       .set({access_token: admin_token})
       .then(response => {
         let {body, status} = response
-        // console.log(body);
         expect(status).toBe(400)
         expect(body).toHaveProperty('msg', 'Cannot insert minus stock!')
         done()
       })
       .catch(err => {
-        // console.log(err, '<<<<<<<< errors');
         done(err)
       })
   });
@@ -337,13 +333,11 @@ describe('Update product, PUT /products', function() {
       .set({access_token: admin_token})
       .then(response => {
         let {body, status} = response
-        // console.log(body);
         expect(status).toBe(400)
         expect(body).toHaveProperty('msg', 'Cannot insert minus price!')
         done()
       })
       .catch(err => {
-        // console.log(err, '<<<<<<<< errors');
         done(err)
       })
   });

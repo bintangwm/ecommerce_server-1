@@ -10,7 +10,6 @@ afterAll((done) => {
     done()
   })
   .catch(err => {
-    console.log(err, 'dari deletebulk')
     done(err)
   })
 });
@@ -28,7 +27,6 @@ describe('Test endpoint POST /register', () => {
         done()
       })
       .catch(err => {
-        console.log(err, 'errorz');
         done(err)
       })
   })
@@ -44,7 +42,6 @@ describe('Test endpoint POST /register', () => {
       done()
     })
     .catch(err => {
-      console.log(err, '<< error');
       done(err)
     })
   })
@@ -55,13 +52,11 @@ describe('Test endpoint POST /register', () => {
     .send({email: 'q@gmail.com', password: ''})
     .then(response => {
       let { body, status } = response
-      console.log(body);
       expect(status).toBe(400)
       expect(body).toHaveProperty('msg', 'Password cannot be empty!')
       done()
     })
     .catch(err => {
-      console.log(err, '<< error');
       done(err)
     })
   })
@@ -72,13 +67,11 @@ describe('Test endpoint POST /register', () => {
     .send({email: '', password: 'qweqwe'})
     .then(response => {
       let { body, status } = response
-      console.log(body);
       expect(status).toBe(400)
       expect(body).toHaveProperty('msg', 'Email cannot be empty!')
       done()
     })
     .catch(err => {
-      console.log(err, '<< error');
       done(err)
     })
   })
@@ -97,7 +90,6 @@ describe('testing di POST /login', function() {
         done()
       })
       .catch(err => {
-        console.log(err);
         done(err)
       })
   })
@@ -108,13 +100,11 @@ describe('testing di POST /login', function() {
       .send({email: 'a@gmail.com', password: 'asd'})
       .then(response => {
         let { body, status} = response
-        // console.log(response.body, '<<<<<<<<<<<<<<<<<<<<<<< response password salah');
         expect(body).toHaveProperty('msg', 'Wrong email/password!')
         expect(status).toBe(400)
         done()
       })
       .catch(err => {
-        console.log(err);
         done(err)
       })
   })
@@ -125,13 +115,11 @@ describe('testing di POST /login', function() {
       .send({email: 'andreaPirlo@gmail.com', password: 'qwe'})
       .then(response => {
         let { body, status} = response
-        // console.log(response.body, '<<<<<<<<<<<<<<<<<<<<<<< email not found');
         expect(body).toHaveProperty('msg', 'Wrong email/password!')
         expect(status).toBe(404)
         done()
       })
       .catch(err => {
-        console.log(err);
         done(err)
       })
   })
@@ -142,13 +130,11 @@ describe('testing di POST /login', function() {
       .send({email: '', password: ''})
       .then(response => {
         let { body, status} = response
-        // console.log(response.body, '<<<<<<<<<<<<<<<<<<<<<<< Email and password required!');
         expect(body).toHaveProperty('msg', 'Email and password required!')
         expect(status).toBe(400)
         done()
       })
       .catch(err => {
-        console.log(err);
         done(err)
       })
   })

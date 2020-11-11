@@ -41,7 +41,6 @@ class ProductController {
   }
 
   static async updateProduct(req,res,next) {
-    console.log('<<<<<<<<<<<<< masuk update product');
     const productId = +req.params.id
     const payload = {
       name: req.body.name,
@@ -67,7 +66,6 @@ class ProductController {
   }
 
   static async deleteProduct(req,res,next) {
-    // console.log('<<<<<<<<<<<<< masuk delete product');
     const productId = +req.params.id
     try {
       if (isNaN(productId)) {
