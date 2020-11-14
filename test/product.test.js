@@ -70,7 +70,7 @@ describe('Create product, POST /products', function() {
         image_url: 'https://cdn.mos.cms.futurecdn.net/yUnL8v4TynaEDbtjsUwDhg-768-80.jpg',
         price: 12000000,
         stock: 10,
-        category: 'Elektronik'
+        CategoryId: 1
       })
       .then(response => {
         let {body, status} = response
@@ -91,7 +91,7 @@ describe('Create product, POST /products', function() {
         image_url: 'https://cdn.mos.cms.futurecdn.net/yUnL8v4TynaEDbtjsUwDhg-768-80.jpg',
         price: 12000000,
         stock: 10,
-        category: 'Elektronik'
+        CategoryId: 1
       })
       .set({access_token: customer_token})
       .then(response => {
@@ -114,7 +114,7 @@ describe('Create product, POST /products', function() {
         image_url: 'https://cdn.mos.cms.futurecdn.net/yUnL8v4TynaEDbtjsUwDhg-768-80.jpg',
         price: 12000000,
         stock: 10,
-        category: 'Elektronik'
+        CategoryId: 1
       })
       .set({access_token: admin_token})
       .then(response => {
@@ -124,7 +124,7 @@ describe('Create product, POST /products', function() {
         expect(body).toHaveProperty('image_url', 'https://cdn.mos.cms.futurecdn.net/yUnL8v4TynaEDbtjsUwDhg-768-80.jpg')
         expect(body).toHaveProperty('price', 12000000)
         expect(body).toHaveProperty('stock', 10)
-        expect(body).toHaveProperty('category', 'Elektronik')
+        expect(body).toHaveProperty('CategoryId', 1)
         
         productId = body.id
 
@@ -143,7 +143,7 @@ describe('Create product, POST /products', function() {
   //       image_url: 'https://cdn.mos.cms.futurecdn.net/yUnL8v4TynaEDbtjsUwDhg-768-80.jpg',
   //       price: 12000000,
   //       stock: 10,
-  //       category: 'Elektronik'
+  //       category: 1
   //     })
   //     .set({access_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBtYWlsLmNvbSIsImlhdCI6MTYwNDkzNjgzMX0.rZxW70ZR9OSVht-SETIk1_L30_ycSbaoJxOfHd9XJVA'})
   //     .then(response => {
@@ -151,10 +151,10 @@ describe('Create product, POST /products', function() {
   //       console.log(body);
   //       expect(status).not.toBe(400)
   //       expect(body).not.toHaveProperty('msg', 'Name cannot be empty!')
-  //       expect(body).not.toHaveProperty('msg', 'Insert a valid image URL!')
+  //       expect(body).not.toHaveProperty('msg', 'Image URL cannot be empty!')
   //       expect(body).not.toHaveProperty('msg', 'Insert a valid number for price!')
   //       expect(body).not.toHaveProperty('msg', 'Insert a valid number for stock!')
-  //       expect(body).not.toHaveProperty('msg', 'Category cannot be empty!')
+  //       expect(body).not.toHaveProperty('msg', 'CategoryId cannot be empty!')
   //       done()
   //     })
   //     .catch(err => {
@@ -171,7 +171,7 @@ describe('Create product, POST /products', function() {
         image_url: 'https://cdn.mos.cms.futurecdn.net/yUnL8v4TynaEDbtjsUwDhg-768-80.jpg',
         price: 12000000,
         stock: -10,
-        category: 'Elektronik'
+        CategoryId: 1
       })
       .set({access_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBtYWlsLmNvbSIsImlhdCI6MTYwNDkzNjgzMX0.rZxW70ZR9OSVht-SETIk1_L30_ycSbaoJxOfHd9XJVA'})
       .then(response => {
@@ -193,7 +193,7 @@ describe('Create product, POST /products', function() {
         image_url: 'https://cdn.mos.cms.futurecdn.net/yUnL8v4TynaEDbtjsUwDhg-768-80.jpg',
         price: -2,
         stock: 10,
-        category: 'Elektronik'
+        CategoryId: 1
       })
       .set({access_token: admin_token})
       .then(response => {
@@ -215,7 +215,7 @@ describe('Create product, POST /products', function() {
         image_url: 'https://cdn.mos.cms.futurecdn.net/yUnL8v4TynaEDbtjsUwDhg-768-80.jpg',
         price: '2s',
         stock: 10,
-        category: 'Elektronik'
+        CategoryId: 1
       })
       .set({access_token: admin_token})
       .then(response => {
@@ -237,7 +237,7 @@ describe('Create product, POST /products', function() {
         image_url: 'https://cdn.mos.cms.futurecdn.net/yUnL8v4TynaEDbtjsUwDhg-768-80.jpg',
         price: 12000000,
         stock: '10ah',
-        category: 'Elektronik'
+        CategoryId: 1
       })
       .set({access_token: admin_token})
       .then(response => {
@@ -262,7 +262,7 @@ describe('Update product, PUT /products', function() {
         image_url: 'https://cf.shopee.co.id/file/e1f03405f9dfcc81f068ccbef2f8851e',
         price: 3500000,
         stock: 12,
-        category: 'Elektronik'
+        CategoryId: 1
       })
       .then(response => {
         let { body, status } = response
@@ -284,7 +284,7 @@ describe('Update product, PUT /products', function() {
         image_url: 'https://cf.shopee.co.id/file/e1f03405f9dfcc81f068ccbef2f8851e',
         price: 3500000,
         stock: 12,
-        category: 'Elektronik'
+        CategoryId: 1
       })
       .then(response => {
         let { body, status } = response
@@ -306,7 +306,7 @@ describe('Update product, PUT /products', function() {
         image_url: 'https://cdn.mos.cms.futurecdn.net/yUnL8v4TynaEDbtjsUwDhg-768-80.jpg',
         price: 12000000,
         stock: -10,
-        category: 'Elektronik'
+        CategoryId: 1
       })
       .set({access_token: admin_token})
       .then(response => {
@@ -328,7 +328,7 @@ describe('Update product, PUT /products', function() {
         image_url: 'https://cdn.mos.cms.futurecdn.net/yUnL8v4TynaEDbtjsUwDhg-768-80.jpg',
         price: -2,
         stock: 10,
-        category: 'Elektronik'
+        CategoryId: 1
       })
       .set({access_token: admin_token})
       .then(response => {

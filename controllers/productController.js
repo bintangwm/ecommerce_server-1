@@ -1,4 +1,4 @@
-const {Product} = require('../models')
+const { Product, Category } = require('../models')
 
 class ProductController {
   static async createProduct(req,res,next) {
@@ -8,8 +8,9 @@ class ProductController {
       image_url: req.body.image_url,
       price: +req.body.price,
       stock: +req.body.stock,
-      category: req.body.category
+      CategoryId: +req.body.CategoryId
     }
+    // console.log(req.body);
     try {
       const product = await Product.create(payload)
       res.status(201).json(product)
@@ -21,20 +22,35 @@ class ProductController {
   }
 
   static async getAllProduct(req,res,next) {
-    const category = req.query.category
+    const CategoryId = req.query.CategoryId
     const id = req.query.id
     const options = {
-      where: {
-        ...category ? {category: category} : {},
-        ...id ? {id: id} : {}
-      },
+      // where: {
+      //   ...CategoryId ? {CategoryId: CategoryId} : {},
+      //   ...id ? {id: id} : {}
+      // },
       order: [
         ['id', 'ASC']
-      ]
+      ],
+      include: ['Category']
     }
     try {
       const products = await Product.findAll(options)
       res.status(200).json(products)
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  static async getProductById(req,res,next) {
+    const productId = +req.params.id
+    try {
+      if (isNaN(productId)) {
+        throw {msg: 'Product id is not valid!'}
+      } else {
+        const product = await Product.findByPk(productId)
+        res.status(200).json(product)
+      }
     } catch (err) {
       next(err)
     }
@@ -47,7 +63,7 @@ class ProductController {
       image_url: req.body.image_url,
       price: +req.body.price,
       stock: +req.body.stock,
-      category: req.body.category
+      CategoryId: +req.body.CategoryId
     }
     try {
       if (isNaN(productId)) {

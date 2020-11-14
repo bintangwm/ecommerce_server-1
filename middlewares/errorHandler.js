@@ -7,6 +7,9 @@ module.exports = function (err, req, res, next) {
   if (err.name === 'JsonWebTokenError') {
     status = 401
     msg = 'token not valid!'
+  } else if (err.name === 'SequelizeForeignKeyConstraintError' && err.index === 'Products_CategoryId_fkey') {
+    status = 400
+    msg = 'Product category FK is not found!'
   } else if (err.errors) {
     if (err.errors[0].message === 'email must be unique') {
       status = 400

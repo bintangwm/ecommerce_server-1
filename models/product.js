@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Product.belongsTo(models.Category)
     }
   };
   Product.init({
@@ -28,9 +29,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isUrl: {
+        notEmpty: {
           args: true,
-          msg: 'Insert a valid image URL!'
+          msg: 'Image URL cannot be empty!'
         }
       }
     },
@@ -62,13 +63,13 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    category: {
-      type: DataTypes.STRING,
+    CategoryId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
-        notEmpty: {
+        isInt: {
           args: true,
-          msg: 'Category cannot be empty!'
+          msg: 'Category Id must be a number!'
         }
       }
     }
