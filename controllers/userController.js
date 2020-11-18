@@ -7,8 +7,7 @@ class UserController {
     const {email, password} = req.body
     const payload = {
       email,
-      password,
-      role: 'customer'
+      password
     }
     try {
       if (!email && !password) {
