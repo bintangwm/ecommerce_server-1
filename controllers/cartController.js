@@ -4,12 +4,15 @@ class CartController {
   static async getAllCart (req, res, next) {
     const UserId = +req.userLoggedIn.id
     const options = {
-      where: { UserId },
+      where: { 
+        UserId,
+        status: 1
+      },
       include: ['Product']
     }
     try {
       const carts = await Cart.findAll (options)
-      res.status(200).json({ carts })
+      res.status(200).json(carts)
     } catch (err) {
       next(err)
     }
@@ -21,17 +24,14 @@ class CartController {
     const options = {
       where: { 
         id,
-        UserId
+        UserId,
+        status: 1
       },
       include: ['Product']
     }
     try {
       const cart = await Cart.findOne (options)
-      if (!cart) {
-        throw { msg: 'cart not found', status: 404 }
-      } else {
-        res.status(200).json({ cart })
-      }
+      res.status(200).json(cart)
     } catch (err) {
       console.log(err);
       next(err)
@@ -48,8 +48,8 @@ class CartController {
       status: 1
     }
     try {
-      if (!UserId || !ProductId) { // mencegah input ProductId == kosong atau NaN
-        throw { msg: 'UserId/ProductId is invalid!'}
+      if (!ProductId) { // mencegah input ProductId == kosong atau NaN
+        throw { msg: 'ProductId is invalid!'}
       } else {
         const options ={
           where: {
@@ -97,37 +97,31 @@ class CartController {
       order
     })
     try {
-      if (!UserId || !CartId) {
-        throw { msg: 'UserId/CartId is invalid!'}  // mencegah input ProductId == kosong atau NaN
-      } else {
-        let result = {}
-        let cart = await Cart.findByPk(CartId, { include: ['Product'] })
-        const options ={
-          where: {
-            id: CartId,
-            UserId,
-            status: 1
-          }
+      let result = {}
+      let cart = await Cart.findByPk(CartId, { include: ['Product'] })
+      const options ={
+        where: {
+          id: CartId,
+          UserId,
+          status: 1
         }
-        if (!cart) {
-          throw { msg: "cart not found!", status: 404 }
-        } else if (cart.quantity >= cart.Product.stock && order == 1) {
-          throw { msg: "can't add quantity more than stock !", status: 404 }
-        } else if (cart.quantity <= 0 || (cart.quantity == 1 && order == 2)) {
-          // kalo quantitynya <= 0 langsung dihapus
-          const destroy = await Cart.destroy(options)
-          result = 'Cart deleted succesfully'
-        } else if (order == 1) {
-          cart = await Cart.increment('quantity', options)
-          result = cart
-        } else if (order == 2) {
-          cart = await Cart.decrement('quantity', options)
-          result = cart
-        } else {
-          throw { msg: "wrong order!", status: 400 }
-        }
-        res.status(200).json({ result })
       }
+      if (cart.quantity >= cart.Product.stock && order == 1) {
+        throw { msg: "can't add quantity more than stock !", status: 404 }
+      } else if (cart.quantity <= 0 || (cart.quantity == 1 && order == 2)) {
+        // kalo quantitynya <= 0 langsung dihapus
+        const destroy = await Cart.destroy(options)
+        result = 'Cart deleted succesfully'
+      } else if (order == 1) {
+        cart = await Cart.increment('quantity', options)
+        result = cart[0][0][0]
+      } else if (order == 2) {
+        cart = await Cart.decrement('quantity', options)
+        result = cart[0][0][0]
+      } else if (order != 1 || order != 2) {
+        throw { msg: "wrong order!", status: 400 }
+      }
+      res.status(200).json(result)
     } catch (err) {
       next(err)
     }
@@ -137,18 +131,14 @@ class CartController {
     const UserId = +req.userLoggedIn.id
     const CartId = +req.params.id
     try {
-      if (!UserId || !CartId) {
-        throw { msg: 'UserId/CartId is invalid!'}  // mencegah input ProductId == kosong atau NaN
-      } else {
-        const options ={
-          where: {
-            id: CartId,
-            UserId,
-            status: 1
-          }
+      const options ={
+        where: {
+          id: CartId,
+          UserId
         }
-        res.status(200).json({ CartId })
       }
+      const destroy = await Cart.destroy(options)
+      res.status(200).json({ msg: 'delete succeed' })
     } catch (err) {
       next(err)
     }
