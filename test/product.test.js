@@ -135,33 +135,93 @@ describe('Create product, POST /products', function() {
       })
   });
 
-  // it('field yang required tidak diisi', function(done) {
-  //   request(app)
-  //     .post('/products')
-  //     .send({
-  //       name: 'PS-5',
-  //       image_url: 'https://cdn.mos.cms.futurecdn.net/yUnL8v4TynaEDbtjsUwDhg-768-80.jpg',
-  //       price: 12000000,
-  //       stock: 10,
-  //       category: 1
-  //     })
-  //     .set({access_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBtYWlsLmNvbSIsImlhdCI6MTYwNDkzNjgzMX0.rZxW70ZR9OSVht-SETIk1_L30_ycSbaoJxOfHd9XJVA'})
-  //     .then(response => {
-  //       let {body, status} = response
-  //       console.log(body);
-  //       expect(status).not.toBe(400)
-  //       expect(body).not.toHaveProperty('msg', 'Name cannot be empty!')
-  //       expect(body).not.toHaveProperty('msg', 'Image URL cannot be empty!')
-  //       expect(body).not.toHaveProperty('msg', 'Insert a valid number for price!')
-  //       expect(body).not.toHaveProperty('msg', 'Insert a valid number for stock!')
-  //       expect(body).not.toHaveProperty('msg', 'CategoryId cannot be empty!')
-  //       done()
-  //     })
-  //     .catch(err => {
-  //       console.log(err, '<<<<<<<< errors');
-  //       done(err)
-  //     })
-  // });
+  it('input name kosong', function(done) {
+    request(app)
+      .post('/products')
+      .send({
+        name: '',
+        image_url: 'https://cdn.mos.cms.futurecdn.net/yUnL8v4TynaEDbtjsUwDhg-768-80.jpg',
+        price: 12000000,
+        stock: 10,
+        CategoryId: 1
+      })
+      .set({access_token: admin_token})
+      .then(response => {
+        let {body, status} = response
+        expect(status).toBe(400)
+        expect(body).toHaveProperty('msg', 'Name cannot be empty!')
+        done()
+      })
+      .catch(err => {
+        done(err)
+      })
+  });
+
+  it('input image_url kosong', function(done) {
+    request(app)
+      .post('/products')
+      .send({
+        name: 'maman',
+        image_url: '',
+        price: 12000000,
+        stock: 10,
+        CategoryId: 1
+      })
+      .set({access_token: admin_token})
+      .then(response => {
+        let {body, status} = response
+        expect(status).toBe(400)
+        expect(body).toHaveProperty('msg', 'Image URL cannot be empty!')
+        done()
+      })
+      .catch(err => {
+        done(err)
+      })
+  });
+
+  it('input NaN pada stock', function(done) {
+    request(app)
+      .post('/products')
+      .send({
+        name: 'maman',
+        image_url: 'https://cdn.mos.cms.futurecdn.net/yUnL8v4TynaEDbtjsUwDhg-768-80.jpg',
+        price: 1200000,
+        stock: '10ss',
+        CategoryId: 1
+      })
+      .set({access_token: admin_token})
+      .then(response => {
+        let {body, status} = response
+        expect(status).toBe(400)
+        expect(body).toHaveProperty('msg', 'Insert a valid number for stock!')
+        done()
+      })
+      .catch(err => {
+        done(err)
+      })
+  });
+
+  it('input NaN pada price', function(done) {
+    request(app)
+      .post('/products')
+      .send({
+        name: 'maman',
+        image_url: 'https://cdn.mos.cms.futurecdn.net/yUnL8v4TynaEDbtjsUwDhg-768-80.jpg',
+        price: '1200000sdasd',
+        stock: 12,
+        CategoryId: 1
+      })
+      .set({access_token: admin_token})
+      .then(response => {
+        let {body, status} = response
+        expect(status).toBe(400)
+        expect(body).toHaveProperty('msg', 'Insert a valid number for price!')
+        done()
+      })
+      .catch(err => {
+        done(err)
+      })
+  });
 
   it('stock diisi angka minus', function(done) {
     request(app)
@@ -298,6 +358,29 @@ describe('Update product, PUT /products', function() {
       })
   });
 
+  it('product not found', function(done) {
+    request(app)
+    .put(`/products/${productId + 100}`)
+      .set({access_token: admin_token})
+      .send({
+        name: 'Gundam',
+        image_url: 'https://cf.shopee.co.id/file/e1f03405f9dfcc81f068ccbef2f8851e',
+        price: 3500000,
+        stock: 12,
+        CategoryId: 1
+      })
+      .then(response => {
+        let { body, status } = response
+        expect(body).toEqual({msg: 'Product not found!'})
+        expect(status).toBe(404)
+        done()
+      })
+      .catch(err => {
+        console.log(err, '<<<<<< error');
+        done(err)
+      })
+  });
+
   it('stock diisi angka minus', function(done) {
     request(app)
       .put(`/products/${productId}`)
@@ -341,13 +424,101 @@ describe('Update product, PUT /products', function() {
         done(err)
       })
   });
+
+  it('input name kosong', function(done) {
+    request(app)
+      .put(`/products/${productId}`)
+      .send({
+        name: '',
+        image_url: 'https://cdn.mos.cms.futurecdn.net/yUnL8v4TynaEDbtjsUwDhg-768-80.jpg',
+        price: 12000000,
+        stock: 10,
+        CategoryId: 1
+      })
+      .set({access_token: admin_token})
+      .then(response => {
+        let {body, status} = response
+        expect(status).toBe(400)
+        expect(body).toHaveProperty('msg', 'Name cannot be empty!')
+        done()
+      })
+      .catch(err => {
+        done(err)
+      })
+  });
+
+  it('input image_url kosong', function(done) {
+    request(app)
+      .put(`/products/${productId}`)
+      .send({
+        name: 'maman',
+        image_url: '',
+        price: 12000000,
+        stock: 10,
+        CategoryId: 1
+      })
+      .set({access_token: admin_token})
+      .then(response => {
+        let {body, status} = response
+        expect(status).toBe(400)
+        expect(body).toHaveProperty('msg', 'Image URL cannot be empty!')
+        done()
+      })
+      .catch(err => {
+        done(err)
+      })
+  });
+
+  it('input NaN pada stock', function(done) {
+    request(app)
+      .put(`/products/${productId}`)
+      .send({
+        name: 'maman',
+        image_url: 'https://cdn.mos.cms.futurecdn.net/yUnL8v4TynaEDbtjsUwDhg-768-80.jpg',
+        price: 1200000,
+        stock: '10ss',
+        CategoryId: 1
+      })
+      .set({access_token: admin_token})
+      .then(response => {
+        let {body, status} = response
+        expect(status).toBe(400)
+        expect(body).toHaveProperty('msg', 'Insert a valid number for stock!')
+        done()
+      })
+      .catch(err => {
+        done(err)
+      })
+  });
+
+  it('input NaN pada price', function(done) {
+    request(app)
+      .put(`/products/${productId}`)
+      .send({
+        name: 'maman',
+        image_url: 'https://cdn.mos.cms.futurecdn.net/yUnL8v4TynaEDbtjsUwDhg-768-80.jpg',
+        price: '1200000sdasd',
+        stock: 12,
+        CategoryId: 1
+      })
+      .set({access_token: admin_token})
+      .then(response => {
+        let {body, status} = response
+        expect(status).toBe(400)
+        expect(body).toHaveProperty('msg', 'Insert a valid number for price!')
+        done()
+      })
+      .catch(err => {
+        done(err)
+      })
+  });
 });
 
 describe('Delete product, DELETE /products', function() {
   it('tidak menyertakan access_token', function(done) {
     request(app)
       .delete(`/products/${productId}`)
-      // .set({access_token: ''})
+      .set({access_token: ''})
       .then(response => {
         let { body, status } = response
         expect(body).toEqual({msg: 'access_token not found!'})
@@ -382,6 +553,21 @@ describe('Delete product, DELETE /products', function() {
         let { body, status } = response
         expect(body).toEqual({msg: 'Product deleted successfully!'})
         expect(status).toBe(200)
+        done()
+      })
+      .catch(err => {
+        done(err)
+      })
+  });
+
+  it('delete, product not found', function(done) {
+    request(app)
+      .delete(`/products/${productId}`)
+      .set({access_token: admin_token})
+      .then(response => {
+        let { body, status } = response
+        expect(body).toEqual({msg: 'Product not found!'})
+        expect(status).toBe(404)
         done()
       })
       .catch(err => {

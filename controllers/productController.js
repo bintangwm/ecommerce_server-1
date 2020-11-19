@@ -42,7 +42,11 @@ class ProductController {
         throw {msg: 'Product id is not valid!'}
       } else {
         const product = await Product.findByPk(productId)
-        res.status(200).json(product)
+        if (!product) {
+          throw { msg: 'Product not found!', status: 404 }
+        } else {
+          res.status(200).json(product)
+        }
       }
     } catch (err) {
       next(err)
@@ -64,7 +68,7 @@ class ProductController {
       } else {
         const product = await Product.update(payload, {where: {id: productId}, returning: true})
         if (product[0] === 0) {
-          throw {msg: 'Product not found!'}
+          throw { msg: 'Product not found!', status: 404 }
         } else {
           res.status(200).json(product[1][0])
         }
@@ -82,7 +86,7 @@ class ProductController {
       } else {
         const product = await Product.destroy({where: {id: productId}, returning: true})
         if (product === 0) {
-          throw {msg: 'Product not found!'}
+          throw { msg: 'Product not found!', status: 404 }
         } else {
           res.status(200).json({msg: 'Product deleted successfully!'})
         }
