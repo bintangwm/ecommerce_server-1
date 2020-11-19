@@ -9,8 +9,9 @@ module.exports = async function (req, res, next) {
       throw { msg: 'UserId/CartId is invalid!'}  // mencegah input ProductId == kosong atau NaN
     } else {
       const cart = await Cart.findByPk(id)
+      // console.log(cart.UserId, userId)
       if (!cart) {
-        throw {msg: 'cart not found!', status: 401}
+        throw {msg: 'cart not found!', status: 404}
       } else if (cart.UserId != userId) {
         throw {msg: 'not authorized!', status: 401}
       } else {

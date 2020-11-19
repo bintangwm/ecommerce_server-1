@@ -173,7 +173,7 @@ describe('Create product, POST /products', function() {
         stock: -10,
         CategoryId: 1
       })
-      .set({access_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBtYWlsLmNvbSIsImlhdCI6MTYwNDkzNjgzMX0.rZxW70ZR9OSVht-SETIk1_L30_ycSbaoJxOfHd9XJVA'})
+      .set({access_token: admin_token})
       .then(response => {
         let {body, status} = response
         expect(status).toBe(400)

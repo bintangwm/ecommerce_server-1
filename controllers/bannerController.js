@@ -17,11 +17,7 @@ class BannerController {
   }
 
   static async getAllBanner(req,res,next) {
-    // const id = req.query.id
     const options = {
-      // where: {
-      //   ...id ? {id: id} : {}
-      // },
       order: [
         ['id', 'ASC']
       ]
@@ -41,7 +37,11 @@ class BannerController {
         throw {msg: 'Banner id is not valid!'}
       } else {
         const banner = await Banner.findByPk(id)
-        res.status(200).json(banner)
+        if (!banner) {
+          throw {msg: 'Banner not found!', status: 404}
+        } else {
+          res.status(200).json(banner)
+        }
       }
     } catch (err) {
       next(err)
@@ -57,11 +57,11 @@ class BannerController {
     }
     try {
       if (isNaN(id)) {
-        throw {msg: 'Banner id is not valid!'}
+        throw {msg: 'Banner id is not valid!', status: 400}
       } else {
         const banner = await Banner.update(payload, {where: {id: id}, returning: true})
         if (banner[0] === 0) {
-          throw {msg: 'Banner not found!'}
+          throw {msg: 'Banner not found!', status: 404}
         } else {
           res.status(200).json(banner[1][0])
         }
@@ -75,11 +75,11 @@ class BannerController {
     const id = +req.params.id
     try {
       if (isNaN(id)) {
-        throw {msg: 'Banner id is not valid!'}
+        throw {msg: 'Banner id is not valid!', status: 400}
       } else {
         const banner = await Banner.destroy({where: {id: id}, returning: true})
         if (banner === 0) {
-          throw {msg: 'Banner not found!'}
+          throw {msg: 'Banner not found!', status: 404}
         } else {
           res.status(200).json({msg: 'Banner deleted successfully!'})
         }

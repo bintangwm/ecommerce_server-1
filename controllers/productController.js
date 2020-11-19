@@ -10,13 +10,10 @@ class ProductController {
       stock: +req.body.stock,
       CategoryId: +req.body.CategoryId
     }
-    // console.log(req.body);
     try {
       const product = await Product.create(payload)
       res.status(201).json(product)
     } catch (err) {
-      // console.log(err, '<<< create product');
-      // return res.status(201).json(err)
       next(err)
     }
   }
@@ -25,10 +22,6 @@ class ProductController {
     const CategoryId = req.query.CategoryId
     const id = req.query.id
     const options = {
-      // where: {
-      //   ...CategoryId ? {CategoryId: CategoryId} : {},
-      //   ...id ? {id: id} : {}
-      // },
       order: [
         ['id', 'ASC']
       ],

@@ -1,4 +1,4 @@
-const { Cart, Product, User } = require('../models')
+const { Cart, Product, Category } = require('../models')
 
 class CartController {
   static async getAllCart (req, res, next) {
@@ -8,10 +8,27 @@ class CartController {
         UserId,
         status: 1
       },
+      order: [
+        ['id', 'ASC']
+      ],
       include: ['Product']
     }
     try {
-      const carts = await Cart.findAll (options)
+      const data = await Cart.findAll (options)
+      const carts = data.map(cart => {
+        const total = cart.quantity * cart.Product.price
+        return {
+          id: cart.id,
+          UserId: cart.UserId,
+          ProductId: cart.ProductId,
+          quantity: cart.quantity,
+          status: cart.status,
+          total: total,
+          createdAt: cart.createdAt,
+          updatedAt: cart.updatedAt,
+          Product: cart.Product
+        }
+      })
       res.status(200).json(carts)
     } catch (err) {
       next(err)
@@ -51,7 +68,7 @@ class CartController {
       if (!ProductId) { // mencegah input ProductId == kosong atau NaN
         throw { msg: 'ProductId is invalid!'}
       } else {
-        const options ={
+        const options = {
           where: {
             UserId,
             ProductId,
@@ -59,6 +76,7 @@ class CartController {
           }
         }
         const product = await Product.findByPk(ProductId)
+        let status = 201
         if (!product) {
           throw { msg: 'product not found!', status: 404 }
         } else {
@@ -67,13 +85,14 @@ class CartController {
             cart = await Cart.create (payload)
           } else {
             if (cart.quantity >= product.stock) {
-              throw { msg: "can't add quantity more than stock !", status: 404 }
+              throw { msg: "can't add quantity more than stock !", status: 400 }
             } else {
+              status = 200
               cart = await Cart.increment('quantity', options)
               cart = cart[0][0][0]
             }
           }
-          res.status(200).json(cart)
+          res.status(status).json(cart)
         }
       }
     } catch (err) {
@@ -107,7 +126,7 @@ class CartController {
         }
       }
       if (cart.quantity >= cart.Product.stock && order == 1) {
-        throw { msg: "can't add quantity more than stock !", status: 404 }
+        throw { msg: "can't add quantity more than stock !", status: 400 }
       } else if (cart.quantity <= 0 || (cart.quantity == 1 && order == 2)) {
         // kalo quantitynya <= 0 langsung dihapus
         const destroy = await Cart.destroy(options)
@@ -138,7 +157,7 @@ class CartController {
         }
       }
       const destroy = await Cart.destroy(options)
-      res.status(200).json({ msg: 'delete succeed' })
+      res.status(200).json({ msg: 'delete cart succeed' })
     } catch (err) {
       next(err)
     }

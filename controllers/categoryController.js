@@ -16,9 +16,6 @@ class CategoryController {
   static async getAllCategory(req,res,next) {
     const id = req.query.id
     const options = {
-      // where: {
-      //   ...id ? {id: id} : {}
-      // },
       order: [
         ['id', 'ASC']
       ]
@@ -38,7 +35,11 @@ class CategoryController {
         throw {msg: 'Category id is not valid!'}
       } else {
         const category = await Category.findByPk(id)
-        res.status(200).json(category)
+        if (!category) {
+          throw {msg: 'Category not found!', status: 404}
+        } else {
+          res.status(200).json(category)
+        }
       }
     } catch (err) {
       next(err)
@@ -52,11 +53,11 @@ class CategoryController {
     }
     try {
       if (isNaN(id)) {
-        throw {msg: 'Category id is not valid!'}
+        throw {msg: 'Category id is not valid!', status: 400}
       } else {
         const category = await Category.update(payload, {where: {id: id}, returning: true})
         if (category[0] === 0) {
-          throw {msg: 'Category not found!'}
+          throw {msg: 'Category not found!', status: 404}
         } else {
           res.status(200).json(category[1][0])
         }
@@ -70,11 +71,11 @@ class CategoryController {
     const id = +req.params.id
     try {
       if (isNaN(id)) {
-        throw {msg: 'Category id is not valid!'}
+        throw {msg: 'Category id is not valid!', status: 400}
       } else {
         const category = await Category.destroy({where: {id: id}, returning: true})
         if (category === 0) {
-          throw {msg: 'Category not found!'}
+          throw {msg: 'Category not found!', status: 404}
         } else {
           res.status(200).json({msg: 'Category deleted successfully!'})
         }

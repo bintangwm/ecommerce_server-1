@@ -5,7 +5,7 @@ module.exports = async function (req,res, next) {
   const { access_token } = req.headers
   try {
     if (!access_token) {
-      throw {msg: 'access_token not found!', status: 401}
+      throw {msg: 'not authenticated!', status: 401}
     } else {
       const decoded = verifyToken(access_token)
       const user = await User.findOne({where: { email: decoded.email}})
